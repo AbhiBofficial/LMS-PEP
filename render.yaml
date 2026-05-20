@@ -1,0 +1,45 @@
+services:
+  - type: web
+    name: lms-pep-api
+    runtime: java
+    plan: free
+    buildCommand: "./mvnw package -DskipTests"
+    startCommand: "java -Dserver.port=$PORT -jar target/library-management-api-0.0.1-SNAPSHOT.jar"
+    envVars:
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: lms-pep-db
+          property: connectionString
+      - key: SPRING_DATASOURCE_USERNAME
+        fromDatabase:
+          name: lms-pep-db
+          property: user
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromDatabase:
+          name: lms-pep-db
+          property: password
+      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+        value: validate
+      - key: SPRING_FLYWAY_ENABLED
+        value: "true"
+      - key: SPRING_FLYWAY_BASELINE_ON_MIGRATE
+        value: "true"
+      - key: LIBRARY_JWT_SECRET
+        generateValue: true
+      - key: LIBRARY_JWT_ACCESS_TOKEN_TTL
+        value: 60m
+      - key: LIBRARY_JWT_REFRESH_TOKEN_TTL
+        value: 7d
+      - key: LIBRARY_MAX_BORROWED_BOOKS
+        value: "5"
+      - key: LIBRARY_LOAN_DAYS
+        value: "14"
+      - key: LIBRARY_FINE_PER_LATE_DAY
+        value: "2.00"
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+
+databases:
+  - name: lms-pep-db
+    plan: free
+    databaseName: library_db
