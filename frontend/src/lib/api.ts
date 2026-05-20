@@ -1,5 +1,5 @@
 import axios from 'axios';
-import toast from 'react-hot-toast';
+import { toast } from 'sonner';
 import { useAuthStore } from '../store/auth';
 import type { AuthResponse } from '../types/api';
 

@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Library, UserPlus } from 'lucide-react';
 import { useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
+import { toast } from 'sonner';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { api, apiMessage } from '../lib/api';
@@ -27,7 +27,7 @@ export function RegisterPage() {
   });
 
   if (token) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/app" replace />;
   }
 
   async function onSubmit(values: FormValues) {
@@ -40,7 +40,7 @@ export function RegisterPage() {
       });
       setAuth(data);
       toast.success('Account created');
-      navigate('/');
+      navigate('/app');
     } catch (error) {
       toast.error(apiMessage(error, 'Registration failed'));
     }

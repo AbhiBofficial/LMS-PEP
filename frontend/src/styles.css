@@ -24,6 +24,9 @@
     --input: 240 5.9% 90%;
     --ring: 240 5.9% 10%;
     --radius: 0.5rem;
+    /* Custom brand colors */
+    --mint: 158 64% 52%;
+    --saffron: 38 92% 50%;
   }
 
   .dark {
@@ -60,23 +63,62 @@
 }
 
 @layer components {
+  /* Buttons */
   .btn {
-    @apply inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-9 px-4 py-2;
+    @apply inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-9 px-4 py-2;
   }
-  
+
   .btn-primary {
-    @apply bg-primary text-primary-foreground shadow hover:bg-primary/90;
+    @apply btn bg-primary text-primary-foreground shadow hover:bg-primary/90;
   }
-  
+
   .btn-secondary {
-    @apply bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80;
+    @apply btn bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80;
   }
-  
+
+  /* Form inputs */
   .input {
     @apply flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50;
   }
 
+  /* Label helper */
+  .label {
+    @apply text-sm font-medium text-foreground;
+  }
+
+  /* Card panel */
+  .panel {
+    @apply rounded-xl border border-border/60 bg-card shadow-sm;
+  }
+
+  /* Table header row */
+  .table-head {
+    @apply bg-muted/50 text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground;
+  }
+
+  /* Glass effect nav */
   .glass-panel {
     @apply bg-background/60 backdrop-blur-xl border border-white/10 shadow-soft dark:shadow-none;
   }
 }
+
+@layer utilities {
+  /* Brand mint color utilities */
+  .text-mint {
+    color: hsl(var(--mint));
+  }
+  .bg-mint {
+    background-color: hsl(var(--mint));
+  }
+  .border-mint {
+    border-color: hsl(var(--mint));
+  }
+  /* Brand saffron color utilities */
+  .text-saffron {
+    color: hsl(var(--saffron));
+  }
+  .bg-saffron {
+    background-color: hsl(var(--saffron));
+  }
+}
+

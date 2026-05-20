@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { KeyRound, Library } from 'lucide-react';
 import { useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
+import { toast } from 'sonner';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { api, apiMessage } from '../lib/api';
@@ -25,15 +25,15 @@ export function LoginPage() {
   });
 
   if (token) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/app" replace />;
   }
 
   async function onSubmit(values: FormValues) {
     try {
       const { data } = await api.post<AuthResponse>('/auth/login', values);
       setAuth(data);
-      toast.success('Signed in');
-      navigate('/');
+      toast.success('Signed in successfully');
+      navigate('/app');
     } catch (error) {
       toast.error(apiMessage(error, 'Login failed'));
     }
