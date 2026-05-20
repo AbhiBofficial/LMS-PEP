@@ -12,5 +12,7 @@ public interface CategoryMapper {
     @Mapping(target = "bookCount", expression = "java(category.getBooks() == null ? 0 : category.getBooks().size())")
     CategoryResponse toResponse(Category category);
 
+    @Mapping(target = "description", ignore = true)
+    @Mapping(target = "books", ignore = true)
     Category toEntity(CategoryRequest request);
 }

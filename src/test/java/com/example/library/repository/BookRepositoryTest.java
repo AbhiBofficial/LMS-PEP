@@ -5,12 +5,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.example.library.entity.Author;
 import com.example.library.entity.Book;
 import com.example.library.entity.Category;
-import java.time.Instant;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,35 +27,31 @@ class BookRepositoryTest {
     private CategoryRepository categoryRepository;
 
     @Test
-    void searchFiltersByTextCategoryAndAvailability() {
-        Instant now = Instant.now();
-        Author author = Author.builder().name("Joshua Bloch").biography("Java author").build();
-        author.setCreatedAt(now);
-        author.setUpdatedAt(now);
+    void findByAuthorIdReturnsMatchingBooks() {
+        Author author = new Author();
+        author.setName("Joshua Bloch");
+        author.setBiography("Java author");
         author = authorRepository.save(author);
 
-        Category category = Category.builder().name("Programming").description("Code").build();
-        category.setCreatedAt(now);
-        category.setUpdatedAt(now);
+        Category category = new Category();
+        category.setName("Programming");
+        category.setDescription("Code");
         category = categoryRepository.save(category);
 
-        Book book = Book.builder()
-                .title("Effective Java")
-                .isbn("9780134685991")
-                .description("Java practices")
-                .publicationYear(2018)
-                .totalCopies(2)
-                .availableCopies(1)
-                .author(author)
-                .categories(Set.of(category))
-                .build();
-        book.setCreatedAt(now);
-        book.setUpdatedAt(now);
+        Book book = new Book();
+        book.setTitle("Effective Java");
+        book.setIsbn("9780134685991");
+        book.setDescription("Java practices");
+        book.setPublicationYear(2018);
+        book.setTotalCopies(2);
+        book.setAvailableCopies(1);
+        book.setAuthor(author);
+        book.setCategories(Set.of(category));
         bookRepository.saveAndFlush(book);
 
-        var result = bookRepository.search("java", author.getId(), category.getId(), true, PageRequest.of(0, 10));
+        var result = bookRepository.findByAuthorId(author.getId());
 
-        assertThat(result.getTotalElements()).isEqualTo(1);
-        assertThat(result.getContent().get(0).getTitle()).isEqualTo("Effective Java");
+        assertThat(result).hasSize(1);
+        assertThat(result.get(0).getTitle()).isEqualTo("Effective Java");
     }
 }

@@ -27,10 +27,10 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+@SuppressWarnings("null")
 @ExtendWith(MockitoExtension.class)
 class BookServiceTest {
 
@@ -64,15 +64,12 @@ class BookServiceTest {
                 borrowHistoryMapper,
                 properties,
                 auditLogService);
-        Book book = Book.builder()
-                .id(1L)
-                .title("Effective Java")
-                .isbn("9780134685991")
-                .author(Author.builder().id(1L).name("Joshua Bloch").build())
-                .totalCopies(3)
-                .availableCopies(2)
-                .build();
-        User user = User.builder().id(9L).email("user@test.local").fullName("User").enabled(true).build();
+
+        Book book = createBook(1L, "Effective Java", "9780134685991", 3, 2);
+        Author author = new Author();
+        author.setName("Joshua Bloch");
+
+        User user = User.builder().id(9L).email("user@test.local").fullName("User").name("User").enabled(true).build();
         BorrowHistoryResponse response = new BorrowHistoryResponse(
                 11L,
                 new UserSummaryResponse(9L, "user@test.local", "User"),
@@ -112,8 +109,9 @@ class BookServiceTest {
                 borrowHistoryMapper,
                 properties(),
                 auditLogService);
-        Book book = Book.builder().id(1L).title("Clean Code").isbn("9780132350884").totalCopies(1).availableCopies(1).build();
-        User user = User.builder().id(2L).email("user@test.local").fullName("User").enabled(true).build();
+
+        Book book = createBook(1L, "Clean Code", "9780132350884", 1, 1);
+        User user = User.builder().id(2L).email("user@test.local").fullName("User").name("User").enabled(true).build();
 
         when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
         when(userService.findUser(2L)).thenReturn(user);
@@ -122,6 +120,24 @@ class BookServiceTest {
         assertThatThrownBy(() -> service.borrow(1L, 2L, "librarian@test.local"))
                 .isInstanceOf(BusinessRuleException.class)
                 .hasMessageContaining("cannot borrow more than 5");
+    }
+
+    private Book createBook(Long id, String title, String isbn, int totalCopies, int availableCopies) {
+        Book book = new Book();
+        // Use reflection or setter to set id for testing
+        book.setTitle(title);
+        book.setIsbn(isbn);
+        book.setTotalCopies(totalCopies);
+        book.setAvailableCopies(availableCopies);
+        // We need an id setter for tests — use the field directly via test utility
+        try {
+            java.lang.reflect.Field idField = Book.class.getDeclaredField("id");
+            idField.setAccessible(true);
+            idField.set(book, id);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to set book id for test", e);
+        }
+        return book;
     }
 
     private LibraryProperties properties() {

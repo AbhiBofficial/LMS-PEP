@@ -1,11 +1,12 @@
 package com.example.library.dto;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import java.time.LocalDate;
 
 public record ProfileRequest(
-        @NotBlank @Email String email,
         @NotBlank String phone,
-        @NotBlank String address
+        @NotBlank String address,
+        LocalDate dateOfBirth,
+        String avatarUrl
 ) {
 }

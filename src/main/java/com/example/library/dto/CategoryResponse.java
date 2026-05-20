@@ -2,6 +2,8 @@ package com.example.library.dto;
 
 public record CategoryResponse(
         Long id,
-        String name
+        String name,
+        String description,
+        int bookCount
 ) {
 }

@@ -12,5 +12,7 @@ public interface AuthorMapper {
     @Mapping(target = "bookCount", expression = "java(author.getBooks() == null ? 0 : author.getBooks().size())")
     AuthorResponse toResponse(Author author);
 
+    @Mapping(target = "biography", ignore = true)
+    @Mapping(target = "books", ignore = true)
     Author toEntity(AuthorRequest request);
 }

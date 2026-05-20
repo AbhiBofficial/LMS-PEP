@@ -1,118 +1,103 @@
-# Library Management API
+# 📚 Libris - Premium Library Management Platform
 
-Spring Boot + Hibernate/JPA REST API for managing library users, profiles, books, authors, and categories.
+Libris is a comprehensive, production-grade, full-stack library management system designed with a premium minimal interface. It features robust backend architecture using Spring Boot 3 and Java 21, coupled with a fast, modern React frontend.
 
-## Tech Stack
+## ✨ Features
 
-- Java 17
-- Spring Boot 3.5.14
-- Spring Web
-- Spring Data JPA / Hibernate
-- H2 in-memory database
-- Jakarta Validation
+- **Premium Interface**: Keyboard-first, dark-mode default UI with floating navigation and command palette.
+- **Enterprise Security**: JWT Authentication, Refresh Tokens, and Role-Based Access Control (RBAC).
+- **Comprehensive Entity Mapping**: Correctly implements all JPA mappings (OneToOne, OneToMany, ManyToOne, ManyToMany).
+- **Audit Logging**: Tracks every action performed in the system.
+- **Robust Database**: PostgreSQL powered with Flyway migrations.
 
-## JPA Relationships Covered
+## 🛠 Tech Stack
 
-- One-to-One: `User` <-> `Profile`
-- One-to-Many: `User` -> borrowed `Book` records
-- Many-to-One: `Book` -> `Author`
-- Many-to-Many: `Book` <-> `Category`
+**Backend**:
+- Java 21, Spring Boot 3, Spring Data JPA, Hibernate
+- PostgreSQL, Flyway, MapStruct, Lombok
+- Spring Security, JWT Auth
+- Swagger/OpenAPI, JUnit, Mockito
 
-## Run
+**Frontend**:
+- React 19, Vite, TypeScript
+- Tailwind CSS (Premium SaaS UI)
+- Zustand, React Query, React Router Dom
+- Framer Motion, Lucide React, Recharts
 
-```powershell
-.\mvnw.cmd spring-boot:run
+## 📂 Folder Structure
+
+```
+library-management-api/
+├── frontend/                # React Vite Application
+│   ├── src/                 # Frontend source code
+│   │   ├── components/      # Reusable UI components
+│   │   ├── lib/             # API client & utils
+│   │   ├── pages/           # Application views
+│   │   ├── store/           # Zustand state management
+│   │   └── types/           # TypeScript definitions
+│   └── tailwind.config.ts   # UI Theme configurations
+├── src/                     # Spring Boot Application
+│   ├── main/java/.../library/
+│   │   ├── config/          # Bean configurations & Swagger
+│   │   ├── controller/      # REST API endpoints
+│   │   ├── dto/             # Data Transfer Objects
+│   │   ├── entity/          # JPA Models (User, Book, Author, etc.)
+│   │   ├── exception/       # Global Exception handling
+│   │   ├── mapper/          # MapStruct mappers
+│   │   ├── repository/      # Spring Data JPA Repositories
+│   │   ├── security/        # JWT Filters & Auth logic
+│   │   └── service/         # Business logic
+│   └── main/resources/
+│       ├── application.properties # Server config
+│       └── db/migration/    # Flyway SQL scripts
 ```
 
-API base URL:
+## 🚀 Getting Started
 
-```text
-http://localhost:8080
+### Prerequisites
+
+- Java 21
+- Node.js 18+
+- Maven
+- PostgreSQL running locally on port `5432` with user `postgres` and password `postgres`.
+
+### 1. Setup Database & Dependencies
+
+Run the setup script which will automatically create the PostgreSQL database, install frontend dependencies, and build the backend.
+
+**Windows**:
+```cmd
+setup.bat
 ```
 
-H2 console:
+### 2. Running the Application
 
-```text
-http://localhost:8080/h2-console
+Run the start script to boot both the backend and frontend simultaneously.
+
+**Windows**:
+```cmd
+run.bat
 ```
 
-JDBC URL:
+- **Frontend**: http://localhost:5173
+- **Backend API**: http://localhost:8080/api/v1
+- **Swagger Docs**: http://localhost:8080/swagger-ui.html
 
-```text
-jdbc:h2:mem:librarydb
+## 🔑 Test Credentials (Seeded by Flyway)
+
+- **Admin**: `admin@library.local` / `password`
+- **Librarian**: `librarian@library.local` / `password`
+- **User**: `user@library.local` / `password`
+
+## 🧪 Testing
+
+To run the automated test suite:
+
+```bash
+./mvnw test
 ```
 
-## Endpoints
+## 📝 API Documentation
 
-| Method | Endpoint | Description |
-| --- | --- | --- |
-| POST | `/users` | Create a user with profile |
-| GET | `/users` | Get all users |
-| GET | `/users/{id}` | Get one user |
-| PUT | `/users/{id}` | Update user and profile |
-| DELETE | `/users/{id}` | Delete user |
-| POST | `/authors` | Add author |
-| GET | `/authors` | Get all authors |
-| GET | `/authors/{id}/books` | Get author's books |
-| POST | `/categories` | Add category |
-| GET | `/categories` | Get all categories |
-| POST | `/books` | Add book with existing author and categories |
-| GET | `/books` | Get all books |
-| GET | `/books/{id}` | Get one book |
-| PUT | `/books/{id}/borrow/{userId}` | Borrow a book |
-| PUT | `/books/{id}/return` | Return a borrowed book |
-
-## Sample Requests
-
-Create an author:
-
-```json
-{
-  "name": "Joshua Bloch",
-  "bio": "Author of Effective Java"
-}
-```
-
-Create a category:
-
-```json
-{
-  "name": "Programming"
-}
-```
-
-Create a user:
-
-```json
-{
-  "name": "Abhishek",
-  "profile": {
-    "email": "abhishek@example.com",
-    "phone": "9876543210",
-    "address": "Delhi"
-  }
-}
-```
-
-Create a book:
-
-```json
-{
-  "title": "Effective Java",
-  "isbn": "9780134685991",
-  "authorId": 1,
-  "categoryIds": [1]
-}
-```
-
-Borrow a book:
-
-```text
-PUT /books/1/borrow/1
-```
-
-Return a book:
-
-```text
-PUT /books/1/return
-```
+Access the automatically generated OpenAPI (Swagger) documentation while the backend is running at:
+`http://localhost:8080/swagger-ui.html`

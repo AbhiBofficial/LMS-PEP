@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.lang.NonNull;
 
 public interface BorrowHistoryRepository extends JpaRepository<BorrowHistory, Long> {
 
@@ -30,6 +31,8 @@ public interface BorrowHistoryRepository extends JpaRepository<BorrowHistory, Lo
     Page<BorrowHistory> findByUserId(Long userId, Pageable pageable);
 
     @Override
+    @NonNull
     @EntityGraph(attributePaths = {"user", "book", "book.author", "book.categories"})
-    Page<BorrowHistory> findAll(Pageable pageable);
+    Page<BorrowHistory> findAll(@NonNull Pageable pageable);
 }
+

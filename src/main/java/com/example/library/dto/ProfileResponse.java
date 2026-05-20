@@ -1,9 +1,12 @@
 package com.example.library.dto;
 
+import java.time.LocalDate;
+
 public record ProfileResponse(
         Long id,
-        String email,
         String phone,
-        String address
+        String address,
+        LocalDate dateOfBirth,
+        String avatarUrl
 ) {
 }

@@ -2,9 +2,11 @@ package com.example.library.controller;
 
 import com.example.library.dto.BookRequest;
 import com.example.library.dto.BookResponse;
+import com.example.library.dto.BorrowHistoryResponse;
 import com.example.library.service.BookService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,8 +45,8 @@ public class BookController {
     }
 
     @PutMapping("/{id}/borrow/{userId}")
-    public BookResponse borrow(@PathVariable Long id, @PathVariable Long userId) {
-        return bookService.borrow(id, userId);
+    public BorrowHistoryResponse borrow(@PathVariable Long id, @PathVariable Long userId, Authentication authentication) {
+        return bookService.borrow(id, userId, authentication.getName());
     }
 
     @PutMapping("/{id}/return")
@@ -52,3 +54,4 @@ public class BookController {
         return bookService.returnBook(id);
     }
 }
+

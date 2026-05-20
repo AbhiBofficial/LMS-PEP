@@ -29,7 +29,16 @@ public final class ApiMapper {
                 .map(ApiMapper::toBookSummary)
                 .toList();
 
-        return new UserResponse(user.getId(), user.getName(), toProfileResponse(user.getProfile()), borrowedBooks);
+        return new UserResponse(
+                user.getId(),
+                user.getEmail(),
+                user.getFullName(),
+                user.isEnabled(),
+                user.getRoles().stream().map(role -> role.getName()).collect(Collectors.toCollection(java.util.TreeSet::new)),
+                toProfileResponse(user.getProfile()),
+                borrowedBooks,
+                user.getBorrowHistory().stream().filter(history -> history.getStatus() == com.example.library.entity.BorrowStatus.BORROWED).count()
+        );
     }
 
     public static UserSummaryResponse toUserSummary(User user) {
@@ -37,7 +46,7 @@ public final class ApiMapper {
             return null;
         }
 
-        return new UserSummaryResponse(user.getId(), user.getName());
+        return new UserSummaryResponse(user.getId(), user.getEmail(), user.getFullName());
     }
 
     public static ProfileResponse toProfileResponse(Profile profile) {
@@ -45,7 +54,13 @@ public final class ApiMapper {
             return null;
         }
 
-        return new ProfileResponse(profile.getId(), profile.getEmail(), profile.getPhone(), profile.getAddress());
+        return new ProfileResponse(
+                profile.getId(),
+                profile.getPhone(),
+                profile.getAddress(),
+                profile.getDateOfBirth(),
+                profile.getAvatarUrl()
+        );
     }
 
     public static BookResponse toBookResponse(Book book) {
@@ -58,6 +73,11 @@ public final class ApiMapper {
                 book.getId(),
                 book.getTitle(),
                 book.getIsbn(),
+                book.getDescription(),
+                book.getPublicationYear(),
+                book.getTotalCopies(),
+                book.getAvailableCopies(),
+                book.getShelfLocation(),
                 toAuthorResponse(book.getAuthor()),
                 categories,
                 toUserSummary(book.getBorrowedBy())
@@ -65,14 +85,14 @@ public final class ApiMapper {
     }
 
     public static BookSummaryResponse toBookSummary(Book book) {
-        return new BookSummaryResponse(book.getId(), book.getTitle(), book.getIsbn());
+        return new BookSummaryResponse(book.getId(), book.getTitle(), book.getIsbn(), book.getAvailableCopies() == null ? 0 : book.getAvailableCopies());
     }
 
     public static AuthorResponse toAuthorResponse(Author author) {
-        return new AuthorResponse(author.getId(), author.getName(), author.getBio());
+        return new AuthorResponse(author.getId(), author.getName(), author.getBiography(), author.getBooks().size());
     }
 
     public static CategoryResponse toCategoryResponse(Category category) {
-        return new CategoryResponse(category.getId(), category.getName());
+        return new CategoryResponse(category.getId(), category.getName(), category.getDescription(), category.getBooks().size());
     }
 }

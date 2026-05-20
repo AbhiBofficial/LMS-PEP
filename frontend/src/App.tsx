@@ -7,6 +7,7 @@ import { BooksPage } from './pages/BooksPage';
 import { BorrowHistoryPage } from './pages/BorrowHistoryPage';
 import { CategoriesPage } from './pages/CategoriesPage';
 import { DashboardPage } from './pages/DashboardPage';
+import { LandingPage } from './pages/LandingPage';
 import { LoginPage } from './pages/LoginPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { RegisterPage } from './pages/RegisterPage';
@@ -16,18 +17,19 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route element={<ProtectedRoute />}>
-          <Route element={<AppLayout />}>
+          <Route path="/app" element={<AppLayout />}>
             <Route index element={<DashboardPage />} />
-            <Route path="/books" element={<BooksPage />} />
-            <Route path="/authors" element={<AuthorsPage />} />
-            <Route path="/categories" element={<CategoriesPage />} />
-            <Route path="/users" element={<UsersPage />} />
-            <Route path="/borrow-history" element={<BorrowHistoryPage />} />
-            <Route path="/admin" element={<AdminPanelPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="books" element={<BooksPage />} />
+            <Route path="authors" element={<AuthorsPage />} />
+            <Route path="categories" element={<CategoriesPage />} />
+            <Route path="users" element={<UsersPage />} />
+            <Route path="borrow-history" element={<BorrowHistoryPage />} />
+            <Route path="admin" element={<AdminPanelPage />} />
+            <Route path="profile" element={<ProfilePage />} />
           </Route>
         </Route>
       </Routes>

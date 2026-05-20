@@ -11,7 +11,10 @@ import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.Table;
+
 @Entity
+@Table(name = "authors")
 public class Author {
 
     @Id
@@ -21,7 +24,8 @@ public class Author {
     @Column(nullable = false)
     private String name;
 
-    private String bio;
+    @Column(length = 2000)
+    private String biography;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     private List<Book> books = new ArrayList<>();
@@ -38,12 +42,20 @@ public class Author {
         this.name = name;
     }
 
+    public String getBiography() {
+        return biography;
+    }
+
+    public void setBiography(String biography) {
+        this.biography = biography;
+    }
+
     public String getBio() {
-        return bio;
+        return biography;
     }
 
     public void setBio(String bio) {
-        this.bio = bio;
+        this.biography = bio;
     }
 
     public List<Book> getBooks() {

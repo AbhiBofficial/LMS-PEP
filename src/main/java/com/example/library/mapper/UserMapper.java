@@ -9,6 +9,7 @@ import com.example.library.entity.BorrowStatus;
 import com.example.library.entity.Role;
 import com.example.library.entity.User;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.mapstruct.Mapper;
@@ -38,10 +39,10 @@ public interface UserMapper {
         Set<String> roles = user.getRoles().stream()
                 .map(Role::getName)
                 .collect(Collectors.toCollection(java.util.TreeSet::new));
-        Set<BookSummaryResponse> borrowedBooks = user.getBorrowedBooks().stream()
+        List<BookSummaryResponse> borrowedBooks = user.getBorrowedBooks().stream()
                 .sorted(Comparator.comparing(Book::getTitle))
                 .map(book -> new BookSummaryResponse(book.getId(), book.getTitle(), book.getIsbn(), book.getAvailableCopies()))
-                .collect(Collectors.toCollection(java.util.LinkedHashSet::new));
+                .toList();
         long activeBorrowCount = user.getBorrowHistory().stream()
                 .filter(history -> history.getStatus() == BorrowStatus.BORROWED)
                 .count();

@@ -10,7 +10,10 @@ import jakarta.persistence.ManyToMany;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import jakarta.persistence.Table;
+
 @Entity
+@Table(name = "categories")
 public class Category {
 
     @Id
@@ -19,6 +22,9 @@ public class Category {
 
     @Column(nullable = false, unique = true)
     private String name;
+
+    @Column(length = 240)
+    private String description;
 
     @ManyToMany(mappedBy = "categories")
     private Set<Book> books = new LinkedHashSet<>();
@@ -33,6 +39,14 @@ public class Category {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Set<Book> getBooks() {
