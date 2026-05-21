@@ -1,103 +1,196 @@
-# 📚 Libris - Premium Library Management Platform
+# 📚 Libris — Premium Library Management Platform
 
-Libris is a comprehensive, production-grade, full-stack library management system designed with a premium minimal interface. It features robust backend architecture using Spring Boot 3 and Java 21, coupled with a fast, modern React frontend.
+[![Frontend](https://img.shields.io/badge/Frontend-Vercel-black?logo=vercel)](https://lms-pep.vercel.app)
+[![Backend](https://img.shields.io/badge/Backend-Render-46E3B7?logo=render)](https://lms-pep-api.onrender.com)
+
+Libris is a production-grade, full-stack library management system with a premium, modern UI. Manage books, patrons, borrowing history, overdue fines, and user roles — all in one place.
+
+## 🔗 Live Deployment
+
+| Service  | URL |
+|----------|-----|
+| **Frontend** | https://lms-pep.vercel.app |
+| **Backend API** | https://lms-pep-api.onrender.com |
+| **Swagger Docs** | https://lms-pep-api.onrender.com/swagger-ui.html |
+
+> **Note**: The backend is on Render's free tier. The first request after inactivity may take 30–60 seconds while the server wakes up.
 
 ## ✨ Features
 
-- **Premium Interface**: Keyboard-first, dark-mode default UI with floating navigation and command palette.
-- **Enterprise Security**: JWT Authentication, Refresh Tokens, and Role-Based Access Control (RBAC).
-- **Comprehensive Entity Mapping**: Correctly implements all JPA mappings (OneToOne, OneToMany, ManyToOne, ManyToMany).
-- **Audit Logging**: Tracks every action performed in the system.
-- **Robust Database**: PostgreSQL powered with Flyway migrations.
+- **Premium Interface** — Floating nav, dark/light mode toggle, command palette (Ctrl+K), and Framer Motion animations
+- **Enterprise Security** — JWT access tokens + refresh tokens, Role-Based Access Control (ADMIN / LIBRARIAN / USER)
+- **Book Catalog** — Full CRUD with pagination, search by title/ISBN/description, filter by author/category/availability
+- **Borrow & Return** — One-click borrowing and returns with automatic 14-day loan period
+- **Fine Calculation** — Auto-calculates overdue fines (₹2/day) with real-time status tracking
+- **Patron Management** — Create/view users with role assignment, active borrow counts
+- **Audit Logging** — Every system action is logged with actor, entity, timestamp, and IP address
+- **Dashboard Analytics** — Real-time stats: total books, active borrows, overdue count, popular categories
+- **Responsive Design** — Mobile-first layout with hamburger menu, works on all screen sizes
 
 ## 🛠 Tech Stack
 
-**Backend**:
-- Java 21, Spring Boot 3, Spring Data JPA, Hibernate
-- PostgreSQL, Flyway, MapStruct, Lombok
-- Spring Security, JWT Auth
-- Swagger/OpenAPI, JUnit, Mockito
+**Backend**
+| Technology | Purpose |
+|------------|---------|
+| Java 21 + Spring Boot 3 | Core API framework |
+| Spring Security + JWT | Authentication & authorization |
+| Spring Data JPA + Hibernate | ORM and database access |
+| PostgreSQL | Relational database |
+| Flyway | Database migrations |
+| MapStruct + Lombok | DTO mapping & boilerplate reduction |
+| Swagger / OpenAPI | Auto-generated API docs |
 
-**Frontend**:
-- React 19, Vite, TypeScript
-- Tailwind CSS (Premium SaaS UI)
-- Zustand, React Query, React Router Dom
-- Framer Motion, Lucide React, Recharts
+**Frontend**
+| Technology | Purpose |
+|------------|---------|
+| React 19 + TypeScript | UI framework |
+| Vite | Build tool |
+| Tailwind CSS v3 | Utility-first styling |
+| Framer Motion | Page/component animations |
+| TanStack React Query | Server state & caching |
+| Zustand | Client-side state (auth + theme) |
+| React Hook Form + Zod | Form validation |
+| Lucide React | Icon library |
+| Sonner | Toast notifications |
 
 ## 📂 Folder Structure
 
 ```
-library-management-api/
-├── frontend/                # React Vite Application
-│   ├── src/                 # Frontend source code
-│   │   ├── components/      # Reusable UI components
-│   │   ├── lib/             # API client & utils
-│   │   ├── pages/           # Application views
-│   │   ├── store/           # Zustand state management
-│   │   └── types/           # TypeScript definitions
-│   └── tailwind.config.ts   # UI Theme configurations
-├── src/                     # Spring Boot Application
-│   ├── main/java/.../library/
-│   │   ├── config/          # Bean configurations & Swagger
-│   │   ├── controller/      # REST API endpoints
-│   │   ├── dto/             # Data Transfer Objects
-│   │   ├── entity/          # JPA Models (User, Book, Author, etc.)
-│   │   ├── exception/       # Global Exception handling
-│   │   ├── mapper/          # MapStruct mappers
-│   │   ├── repository/      # Spring Data JPA Repositories
-│   │   ├── security/        # JWT Filters & Auth logic
-│   │   └── service/         # Business logic
-│   └── main/resources/
-│       ├── application.properties # Server config
-│       └── db/migration/    # Flyway SQL scripts
+LMS-PEP/
+├── frontend/                # React + Vite frontend
+│   ├── src/
+│   │   ├── components/      # Reusable UI (AppLayout, StatCard, etc.)
+│   │   ├── lib/             # API client (axios) & utilities
+│   │   ├── pages/           # Route-level views
+│   │   ├── store/           # Zustand (auth + theme)
+│   │   └── types/           # TypeScript API types
+│   ├── vercel.json          # Vercel deployment config
+│   └── tailwind.config.ts   # Design tokens
+├── src/main/java/.../library/
+│   ├── config/              # Spring beans, OpenAPI, properties
+│   ├── controller/          # REST controllers
+│   ├── dto/                 # Request/Response DTOs
+│   ├── entity/              # JPA entities
+│   ├── exception/           # Global error handling
+│   ├── mapper/              # MapStruct mappers
+│   ├── repository/          # Spring Data repositories
+│   ├── security/            # JWT filter, SecurityConfig
+│   └── service/             # Business logic
+├── src/main/resources/
+│   ├── application.properties
+│   └── db/migration/        # Flyway SQL migrations
+├── render.yaml              # Render backend deployment
+└── README.md
 ```
 
-## 🚀 Getting Started
+## 🚀 Getting Started (Local Development)
 
 ### Prerequisites
 
 - Java 21
 - Node.js 18+
-- Maven
-- PostgreSQL running locally on port `5432` with user `postgres` and password `postgres`.
+- Maven 3.9+
+- PostgreSQL 15+ running on port `5432`
+  - Database: `library_db`
+  - User: `postgres` / Password: `postgres`
 
-### 1. Setup Database & Dependencies
+### 1. Database Setup
 
-Run the setup script which will automatically create the PostgreSQL database, install frontend dependencies, and build the backend.
+PostgreSQL must be running. The Flyway migrations run automatically on startup and create all tables and seed data.
 
-**Windows**:
-```cmd
-setup.bat
+### 2. Start Backend
+
+```bash
+./mvnw spring-boot:run
 ```
 
-### 2. Running the Application
+Backend available at: `http://localhost:8080`
 
-Run the start script to boot both the backend and frontend simultaneously.
+### 3. Start Frontend
 
-**Windows**:
-```cmd
-run.bat
+```bash
+cd frontend
+npm install
+npm run dev
 ```
 
-- **Frontend**: http://localhost:5173
-- **Backend API**: http://localhost:8080/api/v1
-- **Swagger Docs**: http://localhost:8080/swagger-ui.html
+Frontend available at: `http://localhost:5173`
 
-## 🔑 Test Credentials (Seeded by Flyway)
+### Windows Quick Start (All-in-One)
 
-- **Admin**: `admin@library.local` / `password`
-- **Librarian**: `librarian@library.local` / `password`
-- **User**: `user@library.local` / `password`
+```cmd
+setup.bat   # Creates database, installs frontend deps, builds backend
+run.bat     # Starts both backend and frontend concurrently
+```
+
+## 🔑 Demo Credentials
+
+| Role | Email | Password |
+|------|-------|----------|
+| **Admin** | `admin@library.local` | `Password123!` |
+| **Librarian** | `librarian@library.local` | `Password123!` |
+| **User** | `user@library.local` | `Password123!` |
+
+> Seeded automatically by Flyway migration `V2__seed_data.sql`
+
+## ☁️ Deployment
+
+### Frontend → Vercel
+
+1. Connect your GitHub repo to [Vercel](https://vercel.com)
+2. Set **Root Directory** to `frontend`
+3. Set environment variable: `VITE_API_URL=https://lms-pep-api.onrender.com`
+4. Deploy — Vercel handles the Vite build automatically
+
+### Backend → Render (using `render.yaml`)
+
+1. Go to [Render Dashboard](https://dashboard.render.com)
+2. Click **New** → **Blueprint**
+3. Connect the `AbhiBofficial/LMS-PEP` GitHub repository
+4. Render automatically reads `render.yaml` and:
+   - Creates a PostgreSQL database (`lms-pep-db`)
+   - Deploys the Spring Boot API as a Java web service
+   - Wires DB credentials as environment variables
+5. Backend is live at `https://lms-pep-api.onrender.com`
+
+### Environment Variables (Render)
+
+These are set automatically by `render.yaml`:
+
+| Variable | Description |
+|----------|-------------|
+| `SPRING_DATASOURCE_URL` | PostgreSQL connection string (from DB) |
+| `SPRING_DATASOURCE_USERNAME` | DB user |
+| `SPRING_DATASOURCE_PASSWORD` | DB password |
+| `LIBRARY_JWT_SECRET` | Auto-generated JWT signing key |
+| `LIBRARY_JWT_ACCESS_TOKEN_TTL` | `60m` |
+| `LIBRARY_JWT_REFRESH_TOKEN_TTL` | `7d` |
+| `LIBRARY_LOAN_DAYS` | `14` |
+| `LIBRARY_FINE_PER_LATE_DAY` | `2.00` (INR) |
 
 ## 🧪 Testing
-
-To run the automated test suite:
 
 ```bash
 ./mvnw test
 ```
 
-## 📝 API Documentation
+## 📖 API Documentation
 
-Access the automatically generated OpenAPI (Swagger) documentation while the backend is running at:
-`http://localhost:8080/swagger-ui.html`
+Swagger UI (local): `http://localhost:8080/swagger-ui.html`  
+Swagger UI (production): `https://lms-pep-api.onrender.com/swagger-ui.html`
+
+## 📝 Recent Changes
+
+- ✅ Added visible logout button to navigation bar
+- ✅ Added mobile hamburger menu with full navigation
+- ✅ Added loading spinners and error states to all pages
+- ✅ Fixed `returnBook` type mismatch (now correctly shows fine amounts in INR)
+- ✅ Added user guard on "Add User" button (staff only)
+- ✅ Added user avatar with initials fallback on Profile page
+- ✅ Redesigned Categories page as card grid
+- ✅ Added color-coded status badges across all tables
+- ✅ Fixed theme (dark/light) applied on login/register/landing pages
+- ✅ Added 30-second API timeout for Render cold starts
+- ✅ Added inline form validation errors on all forms
+- ✅ Changed currency display to INR (₹)
+- ✅ Updated README with correct demo password and deployment instructions
