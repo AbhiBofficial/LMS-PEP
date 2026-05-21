@@ -7,14 +7,16 @@ export const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:8080',
   headers: {
     'Content-Type': 'application/json'
-  }
+  },
+  timeout: 30_000 // 30-second timeout to handle Render cold starts
 });
 
 const refreshClient = axios.create({
   baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:8080',
   headers: {
     'Content-Type': 'application/json'
-  }
+  },
+  timeout: 30_000
 });
 
 api.interceptors.request.use((config) => {
@@ -40,7 +42,7 @@ api.interceptors.response.use(
         return api(original);
       } catch {
         useAuthStore.getState().clearAuth();
-        toast.error('Session expired');
+        toast.error('Session expired. Please sign in again.');
       }
     }
 
@@ -50,6 +52,12 @@ api.interceptors.response.use(
 
 export function apiMessage(error: unknown, fallback = 'Something went wrong') {
   if (axios.isAxiosError(error)) {
+    if (error.code === 'ECONNABORTED' || error.message?.includes('timeout')) {
+      return 'Request timed out. The server may be waking up — please try again in a moment.';
+    }
+    if (!error.response) {
+      return 'Cannot reach the server. Please check your connection.';
+    }
     return error.response?.data?.message ?? fallback;
   }
   return fallback;

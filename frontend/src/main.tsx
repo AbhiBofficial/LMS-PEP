@@ -5,6 +5,19 @@ import { Toaster } from 'sonner';
 import App from './App';
 import './styles.css';
 
+// Apply theme before React mounts to prevent flash of wrong theme on public pages
+(function applyThemeEarly() {
+  try {
+    const stored = localStorage.getItem('lms-theme');
+    const dark = stored ? JSON.parse(stored)?.state?.dark : false;
+    if (dark) {
+      document.documentElement.classList.add('dark');
+    }
+  } catch {
+    // ignore parse errors
+  }
+})();
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
