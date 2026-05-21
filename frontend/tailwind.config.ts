@@ -33,9 +33,13 @@ export default {
         soft: '0 10px 30px rgba(0, 0, 0, 0.08)',
         glow: '0 0 20px rgba(59, 130, 246, 0.5)'
       },
+      borderWidth: {
+        '3': '3px',
+      },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-out',
         'slide-up': 'slideUp 0.5s ease-out',
+        'shimmer': 'shimmer 1.5s infinite',
       },
       keyframes: {
         fadeIn: {
@@ -45,7 +49,11 @@ export default {
         slideUp: {
           '0%': { transform: 'translateY(20px)', opacity: '0' },
           '100%': { transform: 'translateY(0)', opacity: '1' },
-        }
+        },
+        shimmer: {
+          '0%': { backgroundPosition: '-200% 0' },
+          '100%': { backgroundPosition: '200% 0' },
+        },
       }
     }
   },
