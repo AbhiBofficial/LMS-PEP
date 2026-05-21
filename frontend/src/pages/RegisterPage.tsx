@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Library, UserPlus } from 'lucide-react';
+import { BookOpen, UserPlus } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
@@ -9,9 +9,13 @@ import { useAuthStore } from '../store/auth';
 import type { AuthResponse } from '../types/api';
 
 const schema = z.object({
-  fullName: z.string().min(2).max(160),
-  email: z.string().email(),
-  password: z.string().min(8),
+  fullName: z.string().min(2, 'Name must be at least 2 characters').max(160),
+  email: z.string().email('Please enter a valid email'),
+  password: z
+    .string()
+    .min(8, 'Password must be at least 8 characters')
+    .regex(/[A-Z]/, 'Must include an uppercase letter')
+    .regex(/[0-9]/, 'Must include a number'),
   phone: z.string().optional(),
   address: z.string().optional()
 });
@@ -39,55 +43,102 @@ export function RegisterPage() {
         profile: { phone: values.phone, address: values.address }
       });
       setAuth(data);
-      toast.success('Account created');
+      toast.success('Account created! Welcome to Libris.');
       navigate('/app');
     } catch (error) {
       toast.error(apiMessage(error, 'Registration failed'));
     }
   }
 
+  const errors = formState.errors;
+
   return (
-    <main className="grid min-h-screen bg-slate-50 px-4 py-8 dark:bg-slate-950">
+    <main className="grid min-h-screen bg-muted/30 px-4 py-8">
       <section className="m-auto w-full max-w-xl panel p-8">
-        <div className="mb-8 flex items-center gap-3">
-          <div className="grid h-11 w-11 place-items-center rounded-lg bg-mint text-white">
-            <Library className="h-5 w-5" />
+        {/* Brand Header */}
+        <div className="mb-8 text-center">
+          <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-primary mb-4">
+            <BookOpen className="h-7 w-7 text-primary-foreground" />
           </div>
-          <div>
-            <h1 className="text-xl font-semibold text-slate-950 dark:text-white">Create Account</h1>
-            <p className="text-sm text-slate-500 dark:text-slate-400">Reader access is created immediately</p>
-          </div>
+          <h1 className="text-2xl font-bold">Create your account</h1>
+          <p className="text-sm text-muted-foreground mt-1">Reader access is granted immediately</p>
         </div>
 
-        <form className="grid gap-4 sm:grid-cols-2" onSubmit={handleSubmit(onSubmit)}>
-          <label className="block sm:col-span-2">
-            <span className="label">Full Name</span>
-            <input className="input mt-1" {...register('fullName')} />
-          </label>
-          <label className="block">
-            <span className="label">Email</span>
-            <input className="input mt-1" type="email" {...register('email')} />
-          </label>
-          <label className="block">
-            <span className="label">Password</span>
-            <input className="input mt-1" type="password" {...register('password')} />
-          </label>
-          <label className="block">
-            <span className="label">Phone</span>
-            <input className="input mt-1" {...register('phone')} />
-          </label>
-          <label className="block">
-            <span className="label">Address</span>
-            <input className="input mt-1" {...register('address')} />
-          </label>
-          <button className="btn-primary sm:col-span-2" disabled={formState.isSubmitting}>
+        <form className="grid gap-4 sm:grid-cols-2" onSubmit={handleSubmit(onSubmit)} id="register-form">
+          <div className="sm:col-span-2">
+            <label className="label block mb-1" htmlFor="reg-fullname">Full Name *</label>
+            <input
+              className="input"
+              id="reg-fullname"
+              placeholder="Your full name"
+              autoComplete="name"
+              {...register('fullName')}
+            />
+            {errors.fullName && (
+              <p className="text-xs text-destructive mt-1">{errors.fullName.message}</p>
+            )}
+          </div>
+          <div>
+            <label className="label block mb-1" htmlFor="reg-email">Email *</label>
+            <input
+              className="input"
+              type="email"
+              id="reg-email"
+              placeholder="you@example.com"
+              autoComplete="email"
+              {...register('email')}
+            />
+            {errors.email && (
+              <p className="text-xs text-destructive mt-1">{errors.email.message}</p>
+            )}
+          </div>
+          <div>
+            <label className="label block mb-1" htmlFor="reg-password">Password *</label>
+            <input
+              className="input"
+              type="password"
+              id="reg-password"
+              placeholder="Min 8 chars, 1 uppercase, 1 number"
+              autoComplete="new-password"
+              {...register('password')}
+            />
+            {errors.password && (
+              <p className="text-xs text-destructive mt-1">{errors.password.message}</p>
+            )}
+          </div>
+          <div>
+            <label className="label block mb-1" htmlFor="reg-phone">Phone</label>
+            <input
+              className="input"
+              id="reg-phone"
+              placeholder="+91 98765 43210"
+              {...register('phone')}
+            />
+          </div>
+          <div>
+            <label className="label block mb-1" htmlFor="reg-address">Address</label>
+            <input
+              className="input"
+              id="reg-address"
+              placeholder="City, State"
+              {...register('address')}
+            />
+          </div>
+          <button
+            className="btn-primary sm:col-span-2 h-10"
+            disabled={formState.isSubmitting}
+            id="register-submit"
+          >
             <UserPlus className="h-4 w-4" />
-            Register
+            {formState.isSubmitting ? 'Creating account…' : 'Create Account'}
           </button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-slate-500 dark:text-slate-400">
-          Already registered? <Link className="font-medium text-mint" to="/login">Sign in</Link>
+        <p className="mt-6 text-center text-sm text-muted-foreground">
+          Already registered?{' '}
+          <Link className="font-medium text-primary hover:underline" to="/login" id="login-link">
+            Sign in
+          </Link>
         </p>
       </section>
     </main>
