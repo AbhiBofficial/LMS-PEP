@@ -1,11 +1,15 @@
 services:
   - type: web
     name: lms-pep-api
-    runtime: java
+    runtime: docker
+    dockerfilePath: ./Dockerfile
     plan: free
-    buildCommand: "./mvnw package -DskipTests"
-    startCommand: "java -Dserver.port=$PORT -jar target/library-management-api-0.0.1-SNAPSHOT.jar"
+    # Docker runtime has no separate buildCommand/startCommand —
+    # the Dockerfile ENTRYPOINT handles startup.
+    # The PORT env var is automatically injected by Render.
     envVars:
+      - key: PORT
+        value: "8080"
       - key: SPRING_DATASOURCE_URL
         fromDatabase:
           name: lms-pep-db
@@ -38,6 +42,8 @@ services:
         value: "2.00"
       - key: SPRING_PROFILES_ACTIVE
         value: prod
+      - key: SERVER_PORT
+        value: "8080"
 
 databases:
   - name: lms-pep-db
