@@ -1,3 +1,5 @@
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+
 type Props = {
   page: number;
   totalPages: number;
@@ -5,17 +7,32 @@ type Props = {
 };
 
 export function Pagination({ page, totalPages, onPageChange }: Props) {
+  if (totalPages <= 1) return null;
+
   return (
-    <div className="flex items-center justify-between border-t border-slate-200 px-4 py-3 text-sm dark:border-slate-800">
-      <span className="text-slate-500 dark:text-slate-400">
-        Page {totalPages === 0 ? 0 : page + 1} of {totalPages}
+    <div className="flex items-center justify-between border-t border-border/50 px-4 py-3 text-sm">
+      <span className="text-muted-foreground">
+        Page <span className="font-medium text-foreground">{page + 1}</span> of{' '}
+        <span className="font-medium text-foreground">{totalPages}</span>
       </span>
-      <div className="flex gap-2">
-        <button className="btn-secondary h-9 px-3" disabled={page <= 0} onClick={() => onPageChange(page - 1)}>
-          Previous
+      <div className="flex gap-1">
+        <button
+          className="btn-secondary h-8 w-8 p-0"
+          disabled={page <= 0}
+          onClick={() => onPageChange(page - 1)}
+          id="prev-page"
+          aria-label="Previous page"
+        >
+          <ChevronLeft className="h-4 w-4" />
         </button>
-        <button className="btn-secondary h-9 px-3" disabled={page + 1 >= totalPages} onClick={() => onPageChange(page + 1)}>
-          Next
+        <button
+          className="btn-secondary h-8 w-8 p-0"
+          disabled={page + 1 >= totalPages}
+          onClick={() => onPageChange(page + 1)}
+          id="next-page"
+          aria-label="Next page"
+        >
+          <ChevronRight className="h-4 w-4" />
         </button>
       </div>
     </div>
