@@ -17,7 +17,9 @@ FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
 # Security: run as non-root user
-RUN addgroup -S spring && adduser -S spring -G spring
+# Also create /app/logs as a writable directory (fallback if profile not set)
+RUN addgroup -S spring && adduser -S spring -G spring && \
+    mkdir -p /app/logs && chown -R spring:spring /app
 USER spring
 
 # Copy only the built JAR from the builder stage
